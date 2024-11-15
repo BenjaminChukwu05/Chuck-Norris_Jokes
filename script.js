@@ -1,25 +1,26 @@
-const btn = document.querySelector('#joke-btn');
+const jokeEl = document.getElementById('joke');
+const jokeBtn = document.getElementById('joke-btn');
 
-// Initialize a new XMLHttpRequest
-const fetchJoke = () => {
+const generateJoke = () => {
   const xhr = new XMLHttpRequest();
+
   xhr.open('GET', 'https://api.chucknorris.io/jokes/random');
 
   xhr.onreadystatechange = function () {
-    if (this.readyState === 4 && this.status === 200) {
-      const data = JSON.parse(this.responseText);
-
-      //   const li = document.createElement('li');
-      //   li.innerHTML = `<h2><strong>Joke of the day</strong> - ${data.value}</h2>`;
-      //   document.querySelector('#joke').appendChild(li);
-
-      document.querySelector(
-        '#joke'
-      ).innerHTML = `<li><h2><strong>Joke of the day</strong> - ${data.value}</h2></li>`;
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        // console.log(JSON.parse(this.responseText).value);
+        jokeEl.innerHTML = JSON.parse(this.responseText).value;
+      } else {
+        jokeEl.innerHTML = 'Something Went Wrong (Not Funny)';
+      }
     }
   };
 
   xhr.send();
 };
 
-btn.addEventListener('click', fetchJoke);
+jokeBtn.addEventListener('click', generateJoke);
+
+// Add an event for when the DOM loads (This clears the "Loading...")
+document.addEventListener('DOMContentLoaded', generateJoke);
